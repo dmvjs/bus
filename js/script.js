@@ -28,9 +28,15 @@ var WMATA = {
     },
 
     gotStops: function (stops) {
+        var stop = window.document.getElementById('stop');
         WMATA.stops = stops;
         //console.log(stops);
-        WMATA.computeNearestStop();
+
+        WMATA.closestStop = WMATA.stops.Stops[WMATA.stopHaversine(WMATA.ll[0], WMATA.ll[1])];
+        window.document.title = 'WMATA ' + WMATA.closestStop.Name + ' Stop';
+        stop.innerText = WMATA.closestStop.Name;
+        stop.textContent = WMATA.closestStop.Name;
+
         WMATA.getStopPrediction();
     },
 
@@ -57,10 +63,9 @@ var WMATA = {
         WMATA.displayBusPositions();
     },
 
-    computeNearestStop: function () {
+    stopHaversine: function (lat, lon) {
         'use strict';
         var closest = [-1, 20000],
-            stop = window.document.getElementById('stop'),
             lat1,
             lon1,
             lat2,
@@ -74,9 +79,9 @@ var WMATA = {
             i;
         for (i = 0; i < WMATA.stops.Stops.length; i += 1) {
             //haversine implementation
-            lat1 = WMATA.ll[0];
+            lat1 = lat;
             lat2 = WMATA.stops.Stops[i].Lat;
-            lon1 = WMATA.ll[1];
+            lon1 = lon;
             lon2 = WMATA.stops.Stops[i].Lon;
 
             dLat = (lat2 - lat1) * Math.PI / 180;
@@ -93,57 +98,7 @@ var WMATA = {
             }
         }
 
-        WMATA.closestStop = WMATA.stops.Stops[closest[0]];
-        window.document.title = 'WMATA ' + WMATA.stops.Stops[closest[0]].Name + ' Stop';
-        stop.innerText = WMATA.stops.Stops[closest[0]].Name;
-        stop.textContent = WMATA.stops.Stops[closest[0]].Name;
-    },
-
-    computeBusPosition: function (match) {
-        'use strict';
-        var closest = [-1, 20000],
-            position = window.document.getElementById('position'),
-            lat1,
-            lon1,
-            lat2,
-            lon2,
-            R = 6371, //km
-            dLat,
-            dLon,
-            a,
-            c,
-            d,
-            i,
-            delaySing = parseInt(Math.abs(match.Deviation).toFixed(0), 10) === 1 ? ' minute ' : ' minutes ',
-            delayNotice = (parseFloat(match.Deviation) > 0 ? delaySing + 'ahead of ' : delaySing + 'behind ') + 'schedule.',
-            delayInt = Math.abs(match.Deviation).toFixed(0),
-            delay = delayInt === 0 ? 'It is currently on time.' : 'It is running about ';
-        for (i = 0; i < WMATA.stops.Stops.length; i += 1) {
-            //haversine implementation
-            lat1 = match.Lat;
-            lat2 = WMATA.stops.Stops[i].Lat;
-            lon1 = match.Lon;
-            lon2 = WMATA.stops.Stops[i].Lon;
-
-            dLat = (lat2 - lat1) * Math.PI / 180;
-            dLon = (lon2 - lon1) * Math.PI / 180;
-            lat1 = lat1 * Math.PI / 180;
-            lat2 = lat2 * Math.PI / 180;
-
-            a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
-            c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            d = R * c;
-
-            if (d < closest[1]) {
-                closest = [i, d];
-            }
-        }
-        console.log(match);
-
-        position.innerHTML = 'The next bus was ' + (d * 0.621371).toFixed(0) + ' mile' + (parseInt((d * 0.621371).toFixed(0), 10) === 1 ? '' : 's') +
-            ' away near ' + WMATA.stops.Stops[closest[0]].Name +
-            ' as of ' + WMATA.computeTime(match.DateTime.split('T')[1]) + '. ' +
-            delay + (delayInt > 0 ? delayInt : '') + delayNotice;
+        return closest[0];
     },
 
     computeTime: function (time) {
@@ -219,13 +174,26 @@ var WMATA = {
     displayBusPositions: function () {
         var position = window.document.getElementById('position'),
             match,
-            i = 0;
+            closest,
+            i,
+            delaySing,
+            delayInt;
         for (i = 0; i < WMATA.busPositions.BusPositions.length; i += 1) {
             if (WMATA.busPositions.BusPositions[i].VehicleID === WMATA.stopPredictions.Predictions[0].VehicleID) {
                 match = WMATA.busPositions.BusPositions[i];
             }
         }
-        match === undefined ? position.innerHTML = 'The next bus is not reporting its location at this time.' : WMATA.computeBusPosition(match);
+        delaySing = parseInt(Math.abs(match.Deviation).toFixed(0), 10) === 1 ? ' minute ' : ' minutes ',
+        delayNotice = (parseFloat(match.Deviation) > 0 ? delaySing + 'ahead of ' : delaySing + 'behind ') + 'schedule.',
+        delayInt = parseInt(Math.abs(match.Deviation).toFixed(0), 10),
+        delay = delayInt === 0 ? 'It is currently on time.' : 'It is running about ';
+        match === undefined ? position.innerHTML = 'The next bus is not reporting its location at this time.' : closest = WMATA.stopHaversine(match.Lat, match.Lon);
+
+        if (match !== undefined) {
+            position.innerHTML = 'The next bus was near ' + WMATA.stops.Stops[closest].Name +
+                ' as of ' + WMATA.computeTime(match.DateTime.split('T')[1]) + '. ' +
+                delay + (delayInt > 0 ? delayInt : '') + delayNotice;
+        }
     },
 
     pureAjax: function (url) {
