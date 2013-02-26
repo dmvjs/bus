@@ -54,7 +54,7 @@ h2 {
 
 #position {
     color: white;
-    text-shadow: 0 1px 1px #730b6f;
+    text-shadow: 0 1px 3px #730b6f;
     margin: 0.3em 0.7em 0;
     font-size: 0.9em;
     font-weight: normal;
@@ -123,9 +123,9 @@ h2 {
     background: -webkit-linear-gradient(top,#ffc2f6, #ffadf4 50%, #ffa3f2 50%, #ffa3f2);
     color: #FFF;
     border-bottom: solid 2px white;
-    text-shadow: 0 1px 1px #730b6f;
+    text-shadow: 0 1px 3px #730b6f;
 }
 
 .row:first-child  {
-    border-top: solid 3px #FFF;
+    /*border-top: solid 3px #FFF;*/
 }
