@@ -37,18 +37,17 @@ table {
 
 h1, h2, #contact {
     text-align: center;
+    text-shadow: 0 1px 3px #730b6f;
 }
 
 h1 {
     color: #ffc2f6;
 	line-height: 1em;
-    text-shadow: 0 1px 1px #730b6f;
 }
 
 h2 {
     color: gold;
     font-size: 0.7em;
-    text-shadow: 0 1px 1px #730b6f;
     padding-bottom: 0.1em;
 }
 
@@ -76,7 +75,6 @@ h2 {
     height: 44px;
     line-height: 44px;
     border-radius: 11px;
-    text-shadow: 0 1px 1px #730b6f;
     box-shadow: 0 1px 1px #111, inset 0 1px 1px #EEE;
     background-color: #FF69B4;
     background: -webkit-linear-gradient(top,#ff95fb, #ff56f8 50%, #ff40f7 50%, #d535ce);
@@ -121,8 +119,4 @@ h2 {
     border-bottom: solid 2px white;
     text-shadow: 0 1px 3px #730b6f;
     font-size: 0.9em;
-}
-
-.row:first-child  {
-    /*border-top: solid 3px #FFF;*/
 }
