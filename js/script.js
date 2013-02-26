@@ -16,10 +16,10 @@ var WMATA = {
         }
         if (window.navigator.geolocation) {
             window.navigator.geolocation.getCurrentPosition(showPosition, function () {
-                alert("This device requires geolocation");
+                alert("This device requires geolocation. Please enable and refresh.");
             });
         } else {
-            window.alert("This device does not allow geolocation");
+            window.alert("This device does not allow geolocation, which is required for this application.");
         }
     },
 
@@ -182,10 +182,7 @@ var WMATA = {
             row,
             cell,
             i,
-            j,
-            k,
-            startCodes = [],
-            fromStart;
+            j;
         if (window.document.getElementById('table1') !== null) {
             schedule.removeChild(window.document.getElementById('table1'));
         }
@@ -197,6 +194,7 @@ var WMATA = {
 
         for (i = 0; i < WMATA.stopPredictions.Predictions.length; i += 1) {
             row = window.document.createElement('tr');
+            row.className = 'row';
             for (j = 0; j < results.length; j += 1) {
                 cell = window.document.createElement('td');
                 j === 0 ? cell.appendChild(window.document.createTextNode(WMATA.stops.Stops[j].Routes[0])) : cell.appendChild(window.document.createTextNode(WMATA.stopPredictions.Predictions[i][results[j]]));
@@ -208,9 +206,14 @@ var WMATA = {
         table1.appendChild(tbody1);
         schedule.appendChild(table1);
 
-        WMATA.rainbowify();
         window.setTimeout(function () {WMATA.getPosition();}, 30000);
 
+        if (WMATA.rainbow === undefined) {
+            /mobile/i.test(navigator.userAgent) && setTimeout(function () {
+                window.scrollTo(0, 1);
+            }, 200);
+            WMATA.rainbow = 'unicorn';
+        }
     },
 
     displayBusPositions: function () {
@@ -223,33 +226,6 @@ var WMATA = {
             }
         }
         match === undefined ? position.innerHTML = 'The next bus is not reporting its location at this time.' : WMATA.computeBusPosition(match);
-    },
-
-    rainbowify: function () {
-        'use strict';
-        var i = 0, k = 0,
-            table1 = window.document.getElementById('table1'),
-            lineCells = window.document.getElementsByClassName('cell1'),
-            row;
-
-        for (i = 1; i < table1.rows.length; i += 1) {
-            row = table1.rows[i];
-            row.className = "row " + 'row' + i;
-        }
-
-        for (k = 0; k < lineCells.length; k += 1) {
-            if (lineCells[k].innerText !== undefined) {
-                lineCells[k].id = lineCells[k].innerText;
-            } else {
-                lineCells[k].id = lineCells[k].textContent;
-            }
-        }
-        if (WMATA.rainbow === undefined) {
-            /mobile/i.test(navigator.userAgent) && setTimeout(function () {
-                window.scrollTo(0, 1);
-            }, 200);
-            WMATA.rainbow = 'unicorn';
-        }
     },
 
     pureAjax: function (url) {
