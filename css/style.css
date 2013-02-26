@@ -127,6 +127,5 @@ h2 {
 }
 
 .row:first-child  {
-    margin-top: 50px !important;
     border-top: solid 3px #FFF;
 }
