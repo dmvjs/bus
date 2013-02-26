@@ -176,7 +176,7 @@ var WMATA = {
             table1 = window.document.createElement('table'),
             thead1 = window.document.createElement('thead'),
             tbody1 = window.document.createElement('tbody'),
-            headHTML = '<tr><th class="th1">ROUTE</th>' +
+            headHTML = '<tr><th class="th1">RTE</th>' +
                 '<th class="th2">DIRECTION</th>' +
                 '<th class="th3">MIN</th></tr>',
             row,
