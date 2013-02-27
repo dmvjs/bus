@@ -7,7 +7,7 @@ var WMATA = {
         'use strict';
         function showPosition(position) {
             WMATA.ll = [position.coords.latitude, position.coords.longitude];
-            console.log("attempt");
+            //console.log("attempt");
             if (WMATA.stops === undefined) {
                 WMATA.getStops();
             } else {
@@ -146,7 +146,7 @@ var WMATA = {
         thead1.innerHTML = headHTML;
         table1.id = "table1";
         table1.appendChild(thead1);
-        console.log(WMATA.stopPredictions);
+
         for (i = 0; i < WMATA.stopPredictions.Predictions.length; i += 1) {
             row = window.document.createElement('tr');
             row.className = 'row';
@@ -176,23 +176,31 @@ var WMATA = {
             match,
             closest,
             i,
+            delay,
+            delayNotice,
             delaySing,
             delayInt;
+
         for (i = 0; i < WMATA.busPositions.BusPositions.length; i += 1) {
             if (WMATA.busPositions.BusPositions[i].VehicleID === WMATA.stopPredictions.Predictions[0].VehicleID) {
                 match = WMATA.busPositions.BusPositions[i];
             }
         }
-        delaySing = parseInt(Math.abs(match.Deviation).toFixed(0), 10) === 1 ? ' minute ' : ' minutes ',
-        delayNotice = (parseFloat(match.Deviation) > 0 ? delaySing + 'ahead of ' : delaySing + 'behind ') + 'schedule.',
-        delayInt = parseInt(Math.abs(match.Deviation).toFixed(0), 10),
-        delay = delayInt === 0 ? 'It is currently on time.' : 'It is running about ';
-        match === undefined ? position.innerHTML = 'The next bus is not reporting its location at this time.' : closest = WMATA.stopHaversine(match.Lat, match.Lon);
 
         if (match !== undefined) {
-            position.innerHTML = 'The next bus was near ' + WMATA.stops.Stops[closest].Name +
-                ' as of ' + WMATA.computeTime(match.DateTime.split('T')[1]) + '. ' +
-                delay + (delayInt > 0 ? delayInt : '') + delayNotice;
+            delayInt = parseInt(Math.abs(match.Deviation).toFixed(0), 10);
+            delay = delayInt === 0 ? 'It is currently on time.' : 'It is running about ';
+            delaySing = delayInt === 1 ? ' minute ' : ' minutes ';
+            delayNotice = (parseFloat(match.Deviation) > 0 ? delaySing + 'ahead of ' : delaySing + 'behind ') + 'schedule.';
+            closest = WMATA.stopHaversine(match.Lat, match.Lon);
+
+            if (closest !== undefined) {
+                position.innerHTML = 'The next bus was near ' + WMATA.stops.Stops[closest].Name +
+                    ' as of ' + WMATA.computeTime(match.DateTime.split('T')[1]) + '. ' +
+                    delay + (delayInt > 0 ? delayInt : '') + delayNotice;
+            }
+        } else {
+            position.innerHTML = 'The next bus is not reporting its location at this time.';
         }
     },
 
