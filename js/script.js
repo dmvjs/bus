@@ -146,13 +146,13 @@ var WMATA = {
         thead1.innerHTML = headHTML;
         table1.id = "table1";
         table1.appendChild(thead1);
-
+        console.log(WMATA.stopPredictions);
         for (i = 0; i < WMATA.stopPredictions.Predictions.length; i += 1) {
             row = window.document.createElement('tr');
             row.className = 'row';
             for (j = 0; j < results.length; j += 1) {
                 cell = window.document.createElement('td');
-                j === 0 ? cell.appendChild(window.document.createTextNode(WMATA.stops.Stops[j].Routes[0])) : cell.appendChild(window.document.createTextNode(WMATA.stopPredictions.Predictions[i][results[j]]));
+                j === 0 ? cell.appendChild(window.document.createTextNode(WMATA.stopPredictions.Predictions[i].RouteID)) : cell.appendChild(window.document.createTextNode(WMATA.stopPredictions.Predictions[i][results[j]]));
                 cell.className = 'cell' + (j + 1);
                 row.appendChild(cell);
             }
