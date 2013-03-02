@@ -197,7 +197,7 @@ var WMATA = {
             if (closest !== undefined) {
                 position.innerHTML = 'The next bus was near ' + WMATA.stops.Stops[closest].Name +
                     ' as of ' + WMATA.computeTime(match.DateTime.split('T')[1]) + '. ' +
-                    delay + (delayInt > 0 ? delayInt : '') + delayInt === 0 ? '' : delayNotice;
+                    delay + (delayInt > 0 ? (delayInt + delayNotice) : '');
             }
         } else {
             position.innerHTML = 'The next bus is not reporting its location at this time.';
