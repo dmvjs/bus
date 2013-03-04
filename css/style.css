@@ -88,8 +88,9 @@ h2 {
     background: -webkit-linear-gradient(top, gold, #fff3b0 50%, #decd75 50%, gold);
     padding: 0.3em 0;
     color: #c9a900;
-    text-shadow: 0 -0.06em -0.06em #907300, 0 0.06em 0.06em #FFF;
-    font-weight: normal;
+    text-shadow: 0 -0.1em -0.1em #907300, 0 0.1em 0.1em #FFF;
+    font-weight: bold;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 0.7em;
     border-bottom: solid 1px #907300;
 }
